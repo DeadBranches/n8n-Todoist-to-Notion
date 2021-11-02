@@ -1,0 +1,686 @@
+{
+  "name": "Todoist to Notion",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"project_id\"]}}",
+              "operation": "equal",
+              "value2": 2267354620
+            }
+          ]
+        }
+      },
+      "name": "if idea",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        929,
+        707
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"project_id\"]}}",
+              "operation": "equal",
+              "value2": 2267354621
+            }
+          ]
+        }
+      },
+      "name": "if question",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        930,
+        850
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "todoist",
+        "options": {}
+      },
+      "name": "New Todoist Task Added",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        860
+      ],
+      "webhookId": "5076b20d-431d-4dd2-9a9a-d3a9fea1c018"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"project_id\"]}}",
+              "operation": "equal",
+              "value2": 2267354598
+            }
+          ]
+        }
+      },
+      "name": "if Issue",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        930,
+        980
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "delete",
+        "taskId": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"id\"]}}"
+      },
+      "name": "Remove Task!",
+      "type": "n8n-nodes-base.todoist",
+      "typeVersion": 1,
+      "position": [
+        1590,
+        930
+      ],
+      "credentials": {
+        "todoistOAuth2Api": "Todoist Integration API"
+      }
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "value": "={{JSON.stringify($node[\"New Todoist Task Added\"].json[\"body\"])}}",
+        "secret": "da26bbbb61c240619b834120b0ab679a",
+        "encoding": "base64"
+      },
+      "name": "Crypto",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        270,
+        860
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        1760
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Crypto\"].json[\"data\"]}}",
+              "value2": "={{$node[\"New Todoist Task Added\"].json[\"headers\"][\"x-todoist-hmac-sha256\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        420,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"project_id\"]}}",
+              "operation": "equal",
+              "value2": 2267354612
+            }
+          ]
+        }
+      },
+      "name": "if Grocery",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        930,
+        1120
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "block",
+        "blockId": "9a15c50bd1854c96b8f7c1a711f942ec",
+        "blockUi": {
+          "blockValues": [
+            {
+              "type": "to_do",
+              "textContent": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"content\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Add to Grocery List",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        1120
+      ],
+      "credentials": {
+        "notionApi": "Todoist to Notion Databases"
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": "e1e83c2a-9df3-4d31-98ef-0bafcd6e5084",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Title|title",
+              "title": "={{$json[\"title\"]}}"
+            },
+            {
+              "key": "Issue|rich_text",
+              "textContent": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"description\"]}}"
+            },
+            {
+              "key": "Status|select",
+              "selectValue": "bbe3c0ce-7ec5-4ef7-acac-b9aa78f5620d"
+            }
+          ]
+        }
+      },
+      "name": "Add to Issues DB",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        970
+      ],
+      "credentials": {
+        "notionApi": "Todoist to Notion Databases"
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": "bc1719ce-a7c7-4ed9-ab2a-18fe0885f49e",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Tite|title",
+              "title": "={{$json[\"title\"]}}"
+            },
+            {
+              "key": "Question|rich_text",
+              "textContent": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"description\"]}}"
+            },
+            {
+              "key": "Status|select",
+              "selectValue": "7d6c5754-3c34-4028-bb7f-35a863491a23"
+            }
+          ]
+        }
+      },
+      "name": "Add to Notion DB",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        820
+      ],
+      "credentials": {
+        "notionApi": "Todoist to Notion Databases"
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": "223c5bed-5e44-457f-a0ef-52634f365e74",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Title|title",
+              "title": "={{$json[\"title\"]}}"
+            },
+            {
+              "key": "Idea|rich_text",
+              "textContent": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"description\"]}}"
+            },
+            {
+              "key": "Status|select",
+              "selectValue": "6faf66bc-ccb8-4a31-97ca-9c40c6f83736"
+            }
+          ]
+        }
+      },
+      "name": "Add to Ideas DB",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        670
+      ],
+      "credentials": {
+        "notionApi": "Todoist to Notion Databases"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"project_id\"]}}",
+              "operation": "equal",
+              "value2": 2267354637
+            }
+          ]
+        }
+      },
+      "name": "if Shopping",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        930,
+        1290
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "block",
+        "blockId": "5b10ab6887e54825a03473b6888608ae",
+        "blockUi": {
+          "blockValues": [
+            {
+              "type": "to_do",
+              "textContent": "={{$json[\"title\"]}}"
+            },
+            {
+              "textContent": "=\t{{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"description\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Add to Shopping List",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1150,
+        1300
+      ],
+      "credentials": {
+        "notionApi": "Todoist to Notion Databases"
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": "edd3fd7f-5967-4a12-8aa3-619712fac833",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Name|title",
+              "title": "={{$json[\"title\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Add to Notes DB",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1150,
+        1480
+      ],
+      "credentials": {
+        "notionApi": "Todoist to Notion Databases"
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "number": [
+            {
+              "value1": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"project_id\"]}}",
+              "operation": "equal",
+              "value2": 2267354627
+            }
+          ]
+        }
+      },
+      "name": "if Notes",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        940,
+        1480
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\n\nconst toTitleCase = (str) => {\n  const articles = ['a', 'an', 'the'];\n  const conjunctions = ['for', 'and', 'nor', 'but', 'or', 'yet', 'so'];\n  const prepositions = [\n    'with', 'at', 'from', 'into','upon', 'of', 'to', 'in', 'for',\n    'on', 'by', 'like', 'over', 'plus', 'but', 'up', 'down', 'off', 'near'\n  ];\n\n  // The list of spacial characters can be tweaked here\n  const replaceCharsWithSpace = (str) => str.replace(/[^0-9a-z&/\\\\]/gi, ' ').replace(/(\\s\\s+)/gi, ' ');\n  const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.substr(1);\n  const normalizeStr = (str) => str.toLowerCase().trim();\n  const shouldCapitalize = (word, fullWordList, posWithinStr) => {\n    if ((posWithinStr == 0) || (posWithinStr == fullWordList.length - 1)) {\n      return true;\n    }\n\n    return !(articles.includes(word) || conjunctions.includes(word) || prepositions.includes(word));\n  }\n\n  str = replaceCharsWithSpace(str);\n  str = normalizeStr(str);\n\n  let words = str.split(' ');\n  if (words.length <= 2) { // Strings less than 3 words long should always have first words capitalized\n    words = words.map(w => capitalizeFirstLetter(w));\n  }\n  else {\n    for (let i = 0; i < words.length; i++) {\n      words[i] = (shouldCapitalize(words[i], words, i) ? capitalizeFirstLetter(words[i], words, i) : words[i]);\n    }\n  }\n\n  return words.join(' ');\n}\n\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nfor (item of items) {\n  item.json.title = toTitleCase($item(0).$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"content\"]);\n}\n\nreturn items;"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        620,
+        850
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "block",
+        "blockId": "={{$json[\"id\"]}}",
+        "blockUi": {
+          "blockValues": [
+            {
+              "textContent": "={{$node[\"New Todoist Task Added\"].json[\"body\"][\"event_data\"][\"description\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 1,
+      "position": [
+        1330,
+        1480
+      ],
+      "credentials": {
+        "notionApi": "Todoist to Notion Databases"
+      }
+    }
+  ],
+  "connections": {
+    "if idea": {
+      "main": [
+        [
+          {
+            "node": "Add to Ideas DB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if question": {
+      "main": [
+        [
+          {
+            "node": "Add to Notion DB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Todoist Task Added": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if Issue": {
+      "main": [
+        [
+          {
+            "node": "Add to Issues DB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crypto": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if Grocery": {
+      "main": [
+        [
+          {
+            "node": "Add to Grocery List",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Grocery List": {
+      "main": [
+        [
+          {
+            "node": "Remove Task!",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Issues DB": {
+      "main": [
+        [
+          {
+            "node": "Remove Task!",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Notion DB": {
+      "main": [
+        [
+          {
+            "node": "Remove Task!",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Ideas DB": {
+      "main": [
+        [
+          {
+            "node": "Remove Task!",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if Shopping": {
+      "main": [
+        [
+          {
+            "node": "Add to Shopping List",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Shopping List": {
+      "main": [
+        [
+          {
+            "node": "Remove Task!",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Notes DB": {
+      "main": [
+        [
+          {
+            "node": "Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if Notes": {
+      "main": [
+        [
+          {
+            "node": "Add to Notes DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function2": {
+      "main": [
+        [
+          {
+            "node": "if idea",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "if question",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "if Issue",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "if Grocery",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "if Shopping",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "if Notes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion": {
+      "main": [
+        [
+          {
+            "node": "Remove Task!",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveDataSuccessExecution": "all"
+  },
+  "id": 4
+}
