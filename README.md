@@ -4,7 +4,7 @@ A workflow for the automation tool [n8n](https://n8n.io/). Facilitates using Tod
 
 # The Problem it Solves
 
-On mobile there's an appreciable delay between opening the app and getting to the point of data input. In contrast, Todoist's android widget opens immediately upon click. This workflow saves all the time that would have been spent waiting for Notion. It makes recording fleeting idea and notes into Notion more feasible. 
+On mobile there's an appreciable delay for opening/loading a desired location in Notion before getting to the point of data input. In contrast, Todoist's android widget opens immediately upon click. This workflow allows Todoist to be our input for Notion saving all that time spent waiting. It makes recording fleeting idea and notes into Notion more feasible. 
 
 # How it Works
 
@@ -23,3 +23,11 @@ On mobile there's an appreciable delay between opening the app and getting to th
 ## Credentials
 
 The user is required to setup and configure n8n for both Todoist and Notion credential authentication. Instructions for Todoist credentials can be found [here](https://docs.n8n.io/credentials/todoist/). Notion's credential documentation is found [here](https://docs.n8n.io/credentials/notion/#prerequisites).
+
+## Defining Todoist Project ids
+
+Each **If** block defines the Todoist project id that will trigger the Notion actions that follow the if block.
+
+## Defining Notion database/page/block ids
+
+This is done individually for each Notion block.
