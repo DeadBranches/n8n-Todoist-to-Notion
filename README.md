@@ -31,3 +31,13 @@ Each **If** block defines the Todoist project id that will trigger the Notion ac
 ## Defining Notion database/page/block ids
 
 This is done individually for each Notion block.
+
+# Other Blocks
+
+**Crypto Block**
+
+The crypto block verifies that the webhook request passed to n8n is actually from Todoist's servers. It calculates the HMAC as described in Todoist's API documentation.
+
+**Function2 Block**
+
+A gramatically correct way to convert a string to title case. Authored by [dipole_moment on stackoverflow](https://stackoverflow.com/a/46774740/15066576). Creates a new object with the $json['content'] field formatted in proper case. Important words and acronyms are capitalized. Unimportant words are not. Leaves the original string intact so users can choose if they'd like to use title case or not.
