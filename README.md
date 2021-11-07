@@ -24,6 +24,7 @@ On mobile there's an appreciable delay for opening/loading a desired location in
 # Use Cases and Examples
 
 **Adding a new page to a Notion database filling the title and a property fields**
+
 Todoist (content field) -> Notion Database (title field)
 Todoist (description field) -> Notion Database (property field)
 
@@ -31,6 +32,7 @@ Todoist (description field) -> Notion Database (property field)
 
 
 **Adding a new block to an existing page underneath another block**
+
 Todoist (content field) -> Notion Page (block text)
 
 *Examples:* See the grocery or shopping node sections in the n8n workflow
