@@ -6,6 +6,7 @@ A workflow for the automation tool [n8n](https://n8n.io/). Facilitates using Tod
 
 On mobile there's an appreciable delay for opening/loading a desired location in Notion before getting to the point of data input. In contrast, Todoist's android widget opens immediately upon click. This workflow allows Todoist to be our input for Notion saving all that time spent waiting. It makes recording fleeting idea and notes into Notion more feasible. 
 
+
 # How it Works
 
 1. The workflow recieves webhook notifications from Todoist when a new task is added or updated.
@@ -14,9 +15,36 @@ On mobile there's an appreciable delay for opening/loading a desired location in
 
 ![Image of the workflow](https://i.imgur.com/J47tLBL.jpeg)
 
+
 # What's Required.
 
 - A local or hosted n8n installation
+- 
+
+# Use Cases and Examples
+
+**Adding a new page to a Notion database filling the title and a property fields**
+Todoist (content field) -> Notion Database (title field)
+Todoist (description field) -> Notion Database (property field)
+
+*Examples:* See the Idea, question, or Issue node sections in the n8n workflow
+
+
+**Adding a new block to an existing page underneath another block**
+Todoist (content field) -> Notion Page (block text)
+
+*Examples:* See the grocery or shopping node sections in the n8n workflow
+
+
+**Adding a new page to a Notion database with a title and page content**
+
+Todoist (content field) -> Notion Database (title field)
+
+Todoist (description field) -> Notion Database (page content)
+
+
+*Example:* See the notes node section in the n8n workflow.
+
 
 # Configuration
 
@@ -24,13 +52,16 @@ On mobile there's an appreciable delay for opening/loading a desired location in
 
 The user is required to setup and configure n8n for both Todoist and Notion credential authentication. Instructions for Todoist credentials can be found [here](https://docs.n8n.io/credentials/todoist/). Notion's credential documentation is found [here](https://docs.n8n.io/credentials/notion/#prerequisites).
 
+
 ## Defining Todoist Project ids
 
 Each **If** block defines the Todoist project id that will trigger the Notion actions that follow the if block.
 
+
 ## Defining Notion database/page/block ids
 
 This is done individually for each Notion block.
+
 
 # Other Blocks
 
